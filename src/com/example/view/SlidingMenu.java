@@ -1,6 +1,7 @@
 package com.example.view;
 
 import com.example.qq5slidingmenu.R;
+import com.nineoldandroids.view.ViewHelper;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -177,5 +178,17 @@ public class SlidingMenu extends HorizontalScrollView {
 		} else {
 			openMenu();
 		}
+	}
+	
+	
+	/**
+	 * 滚动发生时调用此方法
+	 */
+	@Override
+	protected void onScrollChanged(int l, int t, int oldl, int oldt) {
+		super.onScrollChanged(l, t, oldl, oldt);
+		float scale = l * 1.0f / mMenuWidth; // 1~0
+		//调用属性动画，设置TranslationX
+		ViewHelper.setTranslationX(mMenu, mMenuWidth * scale);
 	}
 }
