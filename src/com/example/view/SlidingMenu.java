@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 
 public class SlidingMenu extends HorizontalScrollView {
+	private static final String TAG = SlidingMenu.class.getName();
 
 	private LinearLayout mWapper;
 	private ViewGroup mMenu;
@@ -28,6 +30,9 @@ public class SlidingMenu extends HorizontalScrollView {
 
 	private boolean once = false;
 
+	/** 菜单是否开启 */
+	private boolean isOpen;
+
 	/**
 	 * 未自定义属性时调用此构造方法
 	 * 
@@ -35,8 +40,7 @@ public class SlidingMenu extends HorizontalScrollView {
 	 * @param attrs
 	 */
 	public SlidingMenu(Context context, AttributeSet attrs) {
-		super(context, attrs);
-		init(context);
+		this(context, attrs, 0);
 	}
 
 	private void init(Context context) {
@@ -45,11 +49,11 @@ public class SlidingMenu extends HorizontalScrollView {
 		DisplayMetrics dm = new DisplayMetrics();
 		wm.getDefaultDisplay().getMetrics(dm);
 		mScreenWidth = dm.widthPixels;
-		
-//		// 把dp转化为px
-//		mMenuRightPadding = (int) TypedValue.applyDimension(
-//				TypedValue.COMPLEX_UNIT_DIP, 50, context.getResources()
-//						.getDisplayMetrics());
+
+		// // 把dp转化为px
+		// mMenuRightPadding = (int) TypedValue.applyDimension(
+		// TypedValue.COMPLEX_UNIT_DIP, 50, context.getResources()
+		// .getDisplayMetrics());
 	}
 
 	/**
@@ -62,6 +66,7 @@ public class SlidingMenu extends HorizontalScrollView {
 	public SlidingMenu(Context context, AttributeSet attrs, int defStyleAttr) {
 		super(context, attrs, defStyleAttr);
 		// TODO Auto-generated constructor stub
+		Log.d(TAG, "执行了这个构造方法");
 		TypedArray ta = context.getTheme().obtainStyledAttributes(attrs,
 				R.styleable.SliddingMenu, defStyleAttr, 0);
 		int n = ta.getIndexCount();
@@ -69,32 +74,24 @@ public class SlidingMenu extends HorizontalScrollView {
 			int attr = ta.getIndex(i);
 			switch (attr) {
 			case R.styleable.SliddingMenu_rightPadding:
-				mMenuRightPadding = ta.getDimensionPixelSize(attr, (int) TypedValue.applyDimension(
-				TypedValue.COMPLEX_UNIT_DIP, 50, context.getResources()
-						.getDisplayMetrics()));
+				mMenuRightPadding = ta.getDimensionPixelSize(attr,
+						(int) TypedValue.applyDimension(
+								TypedValue.COMPLEX_UNIT_DIP, 50, context
+										.getResources().getDisplayMetrics()));
 				break;
 
 			default:
 				break;
 			}
-			
+
 		}
 		ta.recycle();
 		init(context);
 
 	}
 
-	public SlidingMenu(Context context, AttributeSet attrs, int defStyleAttr,
-			int defStyleRes) {
-		super(context, attrs, defStyleAttr, defStyleRes);
-		// TODO Auto-generated constructor stub
-		init(context);
-	}
-
 	public SlidingMenu(Context context) {
-		super(context);
-		// TODO Auto-generated constructor stub
-		init(context);
+		this(context, null);
 	}
 
 	/**
@@ -139,6 +136,7 @@ public class SlidingMenu extends HorizontalScrollView {
 				this.smoothScrollTo(mMenuWidth, 0);
 			} else {
 				this.smoothScrollTo(0, 0);
+				isOpen = true;
 			}
 			return true;
 
@@ -146,5 +144,38 @@ public class SlidingMenu extends HorizontalScrollView {
 			break;
 		}
 		return super.onTouchEvent(ev);
+	}
+
+	/**
+	 * 打开菜单
+	 */
+	public void openMenu() {
+		if (isOpen)
+			return;
+		else {
+			this.smoothScrollTo(0, 0);
+			isOpen = true;
+		}
+	}
+
+	/**
+	 * 关闭菜单
+	 */
+	public void closeMenu() {
+		if (isOpen) {
+			this.smoothScrollTo(mMenuWidth, 0);
+			isOpen = false;
+		}
+	}
+
+	/**
+	 * 菜单状态的切换
+	 */
+	public void toggle() {
+		if (isOpen) {
+			closeMenu();
+		} else {
+			openMenu();
+		}
 	}
 }
