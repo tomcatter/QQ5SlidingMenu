@@ -188,8 +188,28 @@ public class SlidingMenu extends HorizontalScrollView {
 	protected void onScrollChanged(int l, int t, int oldl, int oldt) {
 		super.onScrollChanged(l, t, oldl, oldt);
 		float scale = l * 1.0f / mMenuWidth; // 1~0
+		/**
+		 * 区别1：内容区域1.0~0.7 缩放的效果 scale : 1.0~0.0 0.7 + 0.3 * scale
+		 * 
+		 * 区别2：菜单的偏移量需要修改
+		 * 
+		 * 区别3：菜单的显示时有缩放以及透明度变化 缩放：0.7 ~1.0 1.0 - scale * 0.3 透明度 0.6 ~ 1.0 
+		 * 0.6+ 0.4 * (1- scale) ;
+		 * 
+		 */
+		
+		float rightScale = 0.7f + 0.3f * scale;
+		float leftScale = 1.0f - scale * 0.3f;
+		float leftAlpha = 0.6f + 0.4f * (1 - scale);
 		//调用属性动画，设置TranslationX
 		//mMenuWidth * scale 会根据菜单出现的宽度动态度化，为实现抽屉效果
-		ViewHelper.setTranslationX(mMenu, mMenuWidth * scale);
+		ViewHelper.setTranslationX(mMenu, mMenuWidth * scale * 0.8f);
+		ViewHelper.setScaleX(mContent, rightScale);
+		ViewHelper.setScaleY(mContent, rightScale);
+		ViewHelper.setPivotX(mContent, 0);
+		ViewHelper.setPivotY(mContent, mContent.getHeight() / 2);
+		ViewHelper.setScaleX(mMenu, leftScale);
+		ViewHelper.setScaleY(mMenu, leftScale);
+		ViewHelper.setAlpha(mMenu, leftAlpha);
 	}
 }

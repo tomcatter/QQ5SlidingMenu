@@ -9,6 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="none"
+        android:background="@drawable/wallpaper_default"
         hyman:rightPadding="80dp" >
 
         <LinearLayout
@@ -21,7 +22,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/wallpaper_default" >
+                android:background="@drawable/qav_plate_defaul_big" >
 
                 <Button
                     android:layout_width="30dp"
