@@ -189,6 +189,7 @@ public class SlidingMenu extends HorizontalScrollView {
 		super.onScrollChanged(l, t, oldl, oldt);
 		float scale = l * 1.0f / mMenuWidth; // 1~0
 		//调用属性动画，设置TranslationX
+		//mMenuWidth * scale 会根据菜单出现的宽度动态度化，为实现抽屉效果
 		ViewHelper.setTranslationX(mMenu, mMenuWidth * scale);
 	}
 }
